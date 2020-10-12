@@ -1,0 +1,146 @@
+Q1.
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	float *a;
+	a = (float*)malloc(sizeof(int));
+	a[0] = 4.5;
+	cout<<a[0];
+	return 0;
+}
+
+OUTPUT: 4.5
+The code executes correctly because even though the sizeof int is allocated to malloc call, the pointer is casted to float, so malloc returns a pointer to float too 
+and a is itself declared a pointer to float
+
+
+Q2.
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	int *a;
+	a = (int*)malloc(sizeof(float));
+	a[0] = 5;
+	cout<<a[0];
+	return 0;
+}
+
+OUTPUT: 5
+works correctly, as before, the pointer returned by malloc is same as expected by the integer pointer a 
+
+
+Q3.
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	int *a,*b;
+	a = (int*)malloc(sizeof(int));
+	b = (int*)malloc(5*sizeof(int));
+	cout<<sizeof(a)<<" "<<sizeof(b)<<endl;
+	return 0;
+}
+
+OUTPUT: 8 8
+the size of both the int pointers is the same, because we are printing the size of integer pointer, both a and b are integer points allocated same size i.e 8 for a given machine
+
+Q4. 
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	int *a;
+	a[0] = (int*)malloc(sizeof(int));//error
+	a[0] = 5;
+	cout<<a[0]<<endl;
+	return 0;
+}
+
+OUTPUT: COMPILE-TIME ERROR - invalid conversion error 
+It generates error on line 2 because a[0] is not an integer pointer but malloc is returning an integer pointer, so  conversion error
+
+s
+Q5. 
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	int *a[5];
+	a[0] = (int*)malloc(sizeof(int));
+	a[0][0] = 5;
+	cout<<a[0][0]<<endl;
+	return 0;
+}
+
+OUTPUT: 5
+correct version of Q4, in this an array of pointer is declared so each position e.g. a[0] is an integer point so no conversion error this time
+and a[0][0] to store an integer 
+
+Q6.
+
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	struct node{
+		int a[10];
+	};
+	struct node *n;
+	n = (struct node*)malloc(sizeof(struct node));
+	cout<<sizeof(n)<<endl;
+	return 0;
+}
+
+OUTPUT: 8
+Explaination: When you do sizeof of a pointer, you always gets the size of the pointer and never what it points to. There is no way (in standard C) to get the size of memory you have allocated with malloc.
+In above code we printed sizeof pointer n which is 8 
+if instead we did -> sizeof(struct node), output would be 4*10 = 10
+but here we are printing sizeof pointer not the memory of what it points to  as pointer n is pointing to a space of 40 bytes in memory but itself has a size of 8
+
+
+Q7.
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	int *a[5];
+	a[0] = (int*)malloc(2*sizeof(int));
+	a[0][1] = 5;
+	cout<<a[0][1]<<endl;
+	return 0;
+}
+OUTPUT: 8
+a is an array of pointers and a[0] is allocated space on heap using malloc, a[0][1] is assigned value 5 which gets printed as output
+
+Q8.
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+int main(){
+	int *a = (int*)malloc(5*sizeof(int));
+	a[0] = 1;
+	a[1] = 2;
+	a[2] = 3;
+	a[3] = 4;
+	a[4] = 5;
+	delete(a);
+	cout<<a[0]<<a[1]<<a[2]<<a[3]<<a[4];
+	return 0;
+} 
+OUTPUT: 00345
+
+Note: delete operator should only be used either for the pointers pointing to the memory allocated using new operator or for a NULL pointer, and free() should only be used either for the pointers pointing to the memory allocated using malloc() or for a NULL pointer because new is an operator and malloc is a function'
+if you malloc you then have to call free to free memory.
+if you new you have to call delete to free memory.
+otherwise it leads to undefined behaviour
+for delete,Pointer to object is not destroyed, value or memory block pointed by pointer is destroyed.
